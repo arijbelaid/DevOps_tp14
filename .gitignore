@@ -1,0 +1,6 @@
+# Dossier Vagrant
+.vagrant/
+
+# Autres fichiers temporaires
+*.log
+.DS_Store
