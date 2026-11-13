@@ -8,6 +8,8 @@
 ## 📝 Présentation du projet
 Ce dépôt contient l'intégralité du TP14. L'objectif était de déployer un cluster Kubernetes multi-nœuds léger avec **K3s** (via Vagrant et Ansible), puis d'explorer les objets Kubernetes fondamentaux (Deployments, Services, Ingress, ConfigMaps, Secrets, PVC, HPA) sur une application de démonstration.
 
+👉 **[📄 Cliquez ici pour télécharger le rapport complet (rapport_tp14.pdf)](rapport_tp14.pdf)**
+
 ## 📂 Structure du Dépôt
 - 📁 `k3s-lab/` : Infrastructure as Code (Vagrantfile, playbook et rôles Ansible).
 - 📁 `k8s-starter/` : Manifestes YAML de l'application.
@@ -18,9 +20,7 @@ Ce dépôt contient l'intégralité du TP14. L'objectif était de déployer un c
 
 ## 🚀 Validation des étapes (Livrables)
 
-<details>
-<summary><b>Partie 1 : Cluster K3s avec Vagrant + Ansible (Cliquez pour voir)</b></summary>
-<br>
+### 🟢 Partie 1 : Cluster K3s avec Vagrant + Ansible
 
 **Vérification du cluster (2 nœuds Ready) et des pods système :**
 ![Cluster Nodes](captures_ecran/00_cluster-nodes.png)
@@ -28,11 +28,10 @@ Ce dépôt contient l'intégralité du TP14. L'objectif était de déployer un c
 **Recréation du cluster complet (destroy & up) :**
 ![Rebuild 1](captures_ecran/01_rebuild.png)
 ![Rebuild 2](captures_ecran/01_rebuild2.png)
-</details>
 
-<details>
-<summary><b>Partie 2 : Pods et Deployments (Cliquez pour voir)</b></summary>
-<br>
+---
+
+### 🟢 Partie 2 : Pods et Deployments
 
 **Création manuelle d'un Pod et suppression :**
 ![Pod Manual](captures_ecran/02_pod-manual.png)
@@ -45,30 +44,27 @@ Ce dépôt contient l'intégralité du TP14. L'objectif était de déployer un c
 **Exploration (describe, logs, exec) :**
 ![Pod Describe](captures_ecran/05a_pod_describe.png)
 ![Pod Explore](captures_ecran/05b_pod_explore.png)
-</details>
 
-<details>
-<summary><b>Partie 3 : Services et Ingress (Cliquez pour voir)</b></summary>
-<br>
+---
+
+### 🟢 Partie 3 : Services et Ingress
 
 **Vérification du Service ClusterIP et des Endpoints :**
 ![Service Endpoints](captures_ecran/06_service_endpoints.png)
 
 **Test de résolution DNS interne au cluster :**
 ![DNS Internal](captures_ecran/08_dns_internal.png)
-</details>
 
-<details>
-<summary><b>Partie 4 : ConfigMap et Secret (Cliquez pour voir)</b></summary>
-<br>
+---
+
+### 🟢 Partie 4 : ConfigMap et Secret
 
 **Injection des variables d'environnement (ConfigMap/Secret) dans l'application :**
 ![ConfigMap Secret](captures_ecran/09_configmap-secret.png)
-</details>
 
-<details>
-<summary><b>Partie 5 : Santé, ressources et déploiements progressifs (Cliquez pour voir)</b></summary>
-<br>
+---
+
+### 🟢 Partie 5 : Santé, ressources et déploiements progressifs
 
 **Test de la LivenessProbe (simulation de panne 500 et redémarrage) :**
 ![Probes Restart](captures_ecran/10_probes-restart.png)
@@ -79,23 +75,20 @@ Ce dépôt contient l'intégralité du TP14. L'objectif était de déployer un c
 **Test de dépassement de mémoire (OOMKilled) et restauration :**
 ![OOM Killed](captures_ecran/12_OOMKilled.png)
 ![Deployment Restored](captures_ecran/13_deployment-restored.png)
-</details>
 
-<details>
-<summary><b>Partie 6 : Stockage persistant (Cliquez pour voir)</b></summary>
-<br>
+---
+
+### 🟢 Partie 6 : Stockage persistant
 
 **Preuve de persistance des données PostgreSQL après suppression du Pod :**
 ![PVC Persistence](captures_ecran/14_pvc-persistence.png)
-</details>
 
-<details>
-<summary><b>Partie 7 : HorizontalPodAutoscaler (Cliquez pour voir)</b></summary>
-<br>
+---
+
+### 🟢 Partie 7 : HorizontalPodAutoscaler (HPA)
 
 **Mise à l'échelle automatique (HPA) : Montée du CPU et augmentation des replicas :**
 ![HPA](captures_ecran/15_hpa.png)
-</details>
 
 ---
 
