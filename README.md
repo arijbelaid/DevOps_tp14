@@ -1,90 +1,106 @@
-# TP14 : Kubernetes avec K3s
+# ☸️ TP14 : Déploiement et Administration d'un Cluster Kubernetes avec K3s
 
-Ce dépôt contient le travail réalisé dans le cadre du TP14. L'objectif est de déployer un cluster Kubernetes léger avec **K3s** (via Vagrant et Ansible) et d'explorer les objets Kubernetes fondamentaux sur une application de démonstration (`traefik/whoami`).
+![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
+![K3s](https://img.shields.io/badge/K3s-FFC61C?style=for-the-badge&logo=k3s&logoColor=black)
+![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)
+![Vagrant](https://img.shields.io/badge/vagrant-%231563FF.svg?style=for-the-badge&logo=vagrant&logoColor=white)
 
-## 🎯 Objectifs pédagogiques
+## 📝 Présentation du projet
+Ce dépôt contient l'intégralité du TP14. L'objectif était de déployer un cluster Kubernetes multi-nœuds léger avec **K3s** (via Vagrant et Ansible), puis d'explorer les objets Kubernetes fondamentaux (Deployments, Services, Ingress, ConfigMaps, Secrets, PVC, HPA) sur une application de démonstration.
 
-À l'issue de ce TP, les compétences suivantes ont été mises en pratique :
-- Déployer un cluster K3s multi-nœuds de manière reproductible (IaC).
-- Utiliser `kubectl` pour l'administration quotidienne (get, describe, logs, apply, rollout...).
-- Maîtriser les objets de base : Namespace, Deployment, Service, Ingress, ConfigMap, Secret, PVC et HPA.
-- Configurer la santé des conteneurs (liveness/readiness probes) et les limites de ressources.
-- Réaliser des mises à jour progressives (rolling update) et des rollbacks.
-- Gérer le stockage persistant et l'autoscaling.
+## 📂 Structure du Dépôt
+- 📁 `k3s-lab/` : Infrastructure as Code (Vagrantfile, playbook et rôles Ansible).
+- 📁 `k8s-starter/` : Manifestes YAML de l'application.
+- 📁 `captures_ecran/` : Preuves visuelles de validation du TP.
+- 📄 `rapport_tp14.pdf` : Rapport détaillé avec les réponses théoriques.
 
-## 🛠️ Prérequis
+---
 
-- **VirtualBox** (avec la virtualisation imbriquée activée)
-- **Vagrant**
-- **Ansible**
-- **kubectl** installé sur la machine hôte (VM de lab)
-- **Ressources** : VM de lab Ubuntu avec au moins 4 vCPU et 8 Go de RAM.
+## 🚀 Validation des étapes (Livrables)
 
-## 📂 Structure du projet
+<details>
+<summary><b>Partie 1 : Cluster K3s avec Vagrant + Ansible (Cliquez pour voir)</b></summary>
+<br>
 
-- `k3s-lab/` : Contient le `Vagrantfile`, le `playbook.yml` et le rôle Ansible `k3s` pour provisionner le cluster.
-- `k8s-starter/` : Contient les manifestes YAML (`01-namespace.yaml` à `07-hpa.yaml`) pour déployer l'application.
-- `captures/` : Contient les captures d'écran des livrables.
+**Vérification du cluster (2 nœuds Ready) et des pods système :**
+![Cluster Nodes](captures_ecran/00_cluster-nodes.png)
 
-## 🚀 Contenu du TP
+**Recréation du cluster complet (destroy & up) :**
+![Rebuild 1](captures_ecran/01_rebuild.png)
+![Rebuild 2](captures_ecran/01_rebuild2.png)
+</details>
 
-### Partie 1 : Cluster K3s avec Vagrant + Ansible
-- Provisionnement d'un serveur K3s et d'un agent via Vagrant.
-- Automatisation de l'installation avec Ansible (rôle `k3s`).
-- Récupération du fichier `kubeconfig` et vérification avec `kubectl get nodes`.
+<details>
+<summary><b>Partie 2 : Pods et Deployments (Cliquez pour voir)</b></summary>
+<br>
 
-### Partie 2 : Pods et Deployments
-- Création manuelle d'un Pod et observation de son comportement.
-- Déploiement de l'application `whoami` via le `Deployment`.
-- Observation de l'auto-réparation (recréation des Pods supprimés) et de la répartition sur les nœuds.
+**Création manuelle d'un Pod et suppression :**
+![Pod Manual](captures_ecran/02_pod-manual.png)
+![Pod Delete](captures_ecran/04a_pod_delete.png)
 
-### Partie 3 : Services et Ingress
-- Exposition interne (ClusterIP) et routage HTTP via Traefik (Ingress).
-- Test de résolution DNS interne au cluster.
-- Configuration de l'Ingress pour `whoami.lab.local`.
+**Application du Deployment et auto-réparation (recréation du pod) :**
+![Deployment Apply](captures_ecran/03_deployment_apply.png)
+![Pod Recreation](captures_ecran/04_pod_recreation.png)
 
-### Partie 4 : ConfigMap et Secret
-- Injection de variables d'environnement via `ConfigMap`.
-- Création et injection d'un `Secret` (clé d'API).
-- Observation de la persistance des variables dans les Pods.
+**Exploration (describe, logs, exec) :**
+![Pod Describe](captures_ecran/05a_pod_describe.png)
+![Pod Explore](captures_ecran/05b_pod_explore.png)
+</details>
 
-### Partie 5 : Santé, ressources et déploiements progressifs
-- Ajout de `readinessProbe` et `livenessProbe` (simulation de panne via `/health`).
-- Configuration des `requests` et `limits` (test de l'état `OOMKilled`).
-- Test de `rolling update` (mise à jour de version) et de `rollback` suite à une image corrompue.
+<details>
+<summary><b>Partie 3 : Services et Ingress (Cliquez pour voir)</b></summary>
+<br>
 
-### Partie 6 : Stockage persistant
-- Déploiement de PostgreSQL avec un `PersistentVolumeClaim` (PVC).
-- Utilisation du provisioner `local-path` de K3s.
-- Test de persistance des données après suppression d'un Pod.
+**Vérification du Service ClusterIP et des Endpoints :**
+![Service Endpoints](captures_ecran/06_service_endpoints.png)
 
-### Partie 7 : HorizontalPodAutoscaler (HPA)
-- Configuration de l'autoscaling basé sur l'utilisation CPU.
-- Génération de charge pour observer la montée et la descente en charge du nombre de replicas.
+**Test de résolution DNS interne au cluster :**
+![DNS Internal](captures_ecran/08_dns_internal.png)
+</details>
 
-## 📸 Livrables
+<details>
+<summary><b>Partie 4 : ConfigMap et Secret (Cliquez pour voir)</b></summary>
+<br>
 
-Les captures d'écran justifiant la réalisation des étapes sont disponibles dans le dossier `captures/` :
+**Injection des variables d'environnement (ConfigMap/Secret) dans l'application :**
+![ConfigMap Secret](captures_ecran/09_configmap-secret.png)
+</details>
 
-- `cluster-nodes.png` : Nœuds du cluster `Ready` et Pods système.
-- `rebuild.png` : Preuve de la recréation du cluster (`vagrant destroy -f && vagrant up`).
-- `ingress.png` : Résultat du `curl http://whoami.lab.local` et de la route `/api`.
-- `probes-restart.png` : Pod redémarré par la `livenessProbe`.
-- `rollout-undo.png` : Historique et retour arrière après échec de déploiement.
-- `pvc-persistence.png` : Preuve de la conservation des données PostgreSQL.
-- `hpa.png` : Capture du HPA en action (`kubectl get hpa -w`).
+<details>
+<summary><b>Partie 5 : Santé, ressources et déploiements progressifs (Cliquez pour voir)</b></summary>
+<br>
 
-## ⚠️ Sécurité et Bonnes Pratiques
+**Test de la LivenessProbe (simulation de panne 500 et redémarrage) :**
+![Probes Restart](captures_ecran/10_probes-restart.png)
 
-Conformément aux consignes de sécurité et aux bonnes pratiques DevOps :
-- **Ne jamais versionner** le dossier `.vagrant/` (contient les clés SSH privées des VMs).
-- **Ne jamais versionner** le fichier `k3s.yaml` (contient les accès administrateur au cluster).
-- **Ne jamais versionner** les fichiers `Secret` (les mots de passe doivent être créés à la volée ou gérés via un gestionnaire de secrets externe).
+**Rolling Update, échec (ImagePullBackOff) et Rollback :**
+![Rollout Undo](captures_ecran/11_rollout-undo.png)
 
-Un fichier `.gitignore` est présent à la racine pour prévenir tout ajout accidentel de ces fichiers sensibles.
+**Test de dépassement de mémoire (OOMKilled) et restauration :**
+![OOM Killed](captures_ecran/12_OOMKilled.png)
+![Deployment Restored](captures_ecran/13_deployment-restored.png)
+</details>
 
-## 🏁 Défi (Bonus)
+<details>
+<summary><b>Partie 6 : Stockage persistant (Cliquez pour voir)</b></summary>
+<br>
 
-- Ajout d'un troisième nœud au cluster modifiant uniquement le `Vagrantfile`.
-- Test de la commande `kubectl drain` pour observer le déplacement des Pods.
-- Mise en place d'un `PodDisruptionBudget` (PDB) pour empêcher l'éviction simultanée de tous les Pods.
+**Preuve de persistance des données PostgreSQL après suppression du Pod :**
+![PVC Persistence](captures_ecran/14_pvc-persistence.png)
+</details>
+
+<details>
+<summary><b>Partie 7 : HorizontalPodAutoscaler (Cliquez pour voir)</b></summary>
+<br>
+
+**Mise à l'échelle automatique (HPA) : Montée du CPU et augmentation des replicas :**
+![HPA](captures_ecran/15_hpa.png)
+</details>
+
+---
+
+## 🔒 Sécurité et Bonnes Pratiques
+Conformément aux règles de sécurité DevOps :
+- Le dossier `.vagrant/` (contenant les clés SSH privées) est exclu via le `.gitignore`.
+- Le fichier `k3s.yaml` (kubeconfig) n'est pas versionné.
+- Les Secrets ne sont pas écrits en dur dans les fichiers YAML.
