@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: tp14
+data:
+  default.conf: |
+    server {
+        listen 80;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+        location /api {
+            default_type text/plain;
+            return 200 "Bienvenue sur l'API Nginx ! (Route /api fonctionnelle)\n";
+        }
+    }

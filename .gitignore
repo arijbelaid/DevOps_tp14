@@ -1,6 +1,3 @@
-# Dossier Vagrant
 .vagrant/
-
-# Autres fichiers temporaires
-*.log
-.DS_Store
+k3s.yaml
+*.zip

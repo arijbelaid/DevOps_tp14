@@ -1,16 +1,17 @@
-# TP14 partie 6 : PostgreSQL avec stockage persistant (PVC, StorageClass local-path de K3s).
+# 1. Le PersistentVolumeClaim (PVC)
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pgdata
+  name: postgres-pvc
   namespace: tp14
 spec:
-  accessModes: ["ReadWriteOnce"]
-  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
 ---
+# 2. Le Deployment PostgreSQL
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +20,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: Recreate # un seul Pod à la fois peut monter un volume ReadWriteOnce
+    type: Recreate # Important pour ne pas monter le même volume deux fois
   selector:
     matchLabels:
       app: postgres
@@ -36,9 +37,32 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
-                  key: password
+                  key: password # <-- On utilise la clé 'password' comme dans ton fichier
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
           ports:
             - containerPort: 5432
-          # TODO : monter le PVC pgdata sur /var/lib/postgresql/data (volumes + volumeMounts)
+          
+          # --- LE TODO EST ICI : LE MONTAGE DU VOLUME ---
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+# 3. Le Service pour accéder à Postgres
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: tp14
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
